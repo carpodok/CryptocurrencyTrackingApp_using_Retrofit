@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.alitalhacoban.cryptocurrencytrackingapp.R
 import com.alitalhacoban.cryptocurrencytrackingapp.model.CryptoModel
+import com.squareup.picasso.Picasso
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -27,6 +29,7 @@ class RecyclerViewAdapter(private var list: ArrayList<CryptoModel>) :
 
         val nameText : TextView = itemView.findViewById(R.id.nameText)
         val priceText : TextView = itemView.findViewById(R.id.priceText)
+        val logoImg : ImageView = itemView.findViewById(R.id.logoImageView)
 
     }
 
@@ -44,10 +47,15 @@ class RecyclerViewAdapter(private var list: ArrayList<CryptoModel>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val itemsViewModel = list[position]
+        val itemsViewModel = filteredList[position]
 
         holder.nameText.text = itemsViewModel.currency
         holder.priceText.text = itemsViewModel.price
+
+        if (itemsViewModel.currency == "BTC"){
+            Picasso.get().load("https://s3.us-east-2.amazonaws.com/nomics-api/static/images/currencies/btc.svg").into(holder.logoImg)
+        }
+        Picasso.get().load(itemsViewModel.logo_url).into(holder.logoImg)
 
 
     }
