@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:layout_marginVertical="15dp">
 
-    <ImageView
-        android:src="@mipmap/ic_launcher"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="100dp"
-        android:id="@+id/logoImageView"
-         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <TextView
-        android:gravity="center"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:id="@+id/nameText"/>
+        <TextView
+            android:textStyle="bold"
+            android:paddingStart="20dp"
+            android:text="BTC"
+            android:gravity="start"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/nameText"/>
 
-    <TextView
-        android:gravity="center"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:id="@+id/priceText"/>
+        <TextView
+            android:paddingEnd="20dp"
+            android:textStyle="bold"
+            android:text="0.000"
+            android:gravity="end"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/priceText"/>
+    </LinearLayout>
 
 
 
 
 
-</LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

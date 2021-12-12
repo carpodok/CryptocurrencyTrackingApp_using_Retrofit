@@ -3,11 +3,13 @@ package com.alitalhacoban.cryptocurrencytrackingapp.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alitalhacoban.cryptocurrencytrackingapp.R
 import com.alitalhacoban.cryptocurrencytrackingapp.adapter.RecyclerViewAdapter
 import com.alitalhacoban.cryptocurrencytrackingapp.databinding.ActivityMainBinding
+import com.alitalhacoban.cryptocurrencytrackingapp.model.CoinModel
 import com.alitalhacoban.cryptocurrencytrackingapp.model.CryptoModel
 import com.alitalhacoban.cryptocurrencytrackingapp.service.CryptoAPI
 import retrofit2.Call
@@ -22,7 +24,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val BASE_URL = "https://api.nomics.com/v1/"
+   // private val BASE_URL = "https://api.coinpaprika.com/v1/"
+   // private val BASE_URL = "https://pro-api.coinmarketcap.com/"
     private var models: ArrayList<CryptoModel>? = null
+
 
     private lateinit var recyclerView : RecyclerView
 
@@ -34,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         recyclerView = findViewById(R.id.recycleView)
-
 
         val layoutManager : RecyclerView.LayoutManager = LinearLayoutManager(this)
 
@@ -64,6 +68,7 @@ class MainActivity : AppCompatActivity() {
 
         val service = retrofit.create(CryptoAPI::class.java)
         val call = service.getData()
+
 
         call.enqueue( object : Callback<List<CryptoModel>>{
             override fun onResponse(
