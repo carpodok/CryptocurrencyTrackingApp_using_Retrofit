@@ -6,13 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.alitalhacoban.cryptocurrencytrackingapp.R
-import com.alitalhacoban.cryptocurrencytrackingapp.model.CoinModel
 import com.alitalhacoban.cryptocurrencytrackingapp.model.CryptoModel
-import com.squareup.picasso.Picasso
 import java.util.*
 import kotlin.collections.ArrayList
 

@@ -1,21 +1,20 @@
 package com.alitalhacoban.cryptocurrencytrackingapp.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.SearchView
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alitalhacoban.cryptocurrencytrackingapp.R
 import com.alitalhacoban.cryptocurrencytrackingapp.adapter.RecyclerViewAdapter
 import com.alitalhacoban.cryptocurrencytrackingapp.databinding.ActivityMainBinding
-import com.alitalhacoban.cryptocurrencytrackingapp.model.CoinModel
 import com.alitalhacoban.cryptocurrencytrackingapp.model.CryptoModel
 import com.alitalhacoban.cryptocurrencytrackingapp.service.CryptoAPI
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
@@ -24,9 +23,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val BASE_URL = "https://api.nomics.com/v1/"
-   // private val BASE_URL = "https://api.coinpaprika.com/v1/"
-   // private val BASE_URL = "https://pro-api.coinmarketcap.com/"
     private var models: ArrayList<CryptoModel>? = null
+
+    private var compositeDisposable : CompositeDisposable? = null
 
 
     private lateinit var recyclerView : RecyclerView
@@ -38,11 +37,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        compositeDisposable = CompositeDisposable()
+
         recyclerView = findViewById(R.id.recycleView)
 
         val layoutManager : RecyclerView.LayoutManager = LinearLayoutManager(this)
 
         recyclerView.layoutManager = layoutManager
+
+
 
         loadData()
 
@@ -62,35 +65,31 @@ class MainActivity : AppCompatActivity() {
     private fun loadData(){
 
         val retrofit = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(BASE_URL)
-            .build()
-
-        val service = retrofit.create(CryptoAPI::class.java)
-        val call = service.getData()
-
-
-        call.enqueue( object : Callback<List<CryptoModel>>{
-            override fun onResponse(
-                call: Call<List<CryptoModel>>,
-                response: Response<List<CryptoModel>>
-            ) {
-                response.body()?.let {
-                    models = ArrayList(it)
-
-                    models?.let {
-                        adapter = RecyclerViewAdapter(it)
-                        recyclerView.adapter = adapter
-                    }
-
-                }
-            }
-
-            override fun onFailure(call: Call<List<CryptoModel>>, t: Throwable) {
-                t.printStackTrace()
-            }
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build().create(CryptoAPI::class.java)
 
 
-            })
+        compositeDisposable?.add(retrofit.getData()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::handleResponse))
+
+    }
+
+
+    private fun handleResponse(cryptoList : List<CryptoModel>){
+        models = ArrayList(cryptoList)
+
+        models?.let {
+            adapter = RecyclerViewAdapter(it)
+            recyclerView.adapter = adapter
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable?.clear()
     }
 }
