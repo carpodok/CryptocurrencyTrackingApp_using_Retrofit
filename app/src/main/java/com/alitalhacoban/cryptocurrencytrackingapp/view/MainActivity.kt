@@ -19,7 +19,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
-
     private lateinit var binding: ActivityMainBinding
 
     private val BASE_URL = "https://api.nomics.com/v1/"
