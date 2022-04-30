@@ -39,11 +39,10 @@ class MainActivity : AppCompatActivity() {
 
         compositeDisposable = CompositeDisposable()
 
-        recyclerView = findViewById(R.id.recycleView)
 
         val layoutManager : RecyclerView.LayoutManager = LinearLayoutManager(this)
 
-        recyclerView.layoutManager = layoutManager
+        binding.recyclerView.layoutManager = layoutManager
 
 
 
